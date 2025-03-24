@@ -5,15 +5,20 @@ import "react-calendar-heatmap/dist/styles.css";
 import { Tooltip} from "react-tooltip";
 
 export default function Home() {
-  const [data, setData] = useState<any[]>([]);
-
+  type HeatmapEntry = {
+    date: string;
+    count: number;
+  };
+  
+  const [data, setData] = useState<HeatmapEntry[]>([]);
+  
   useEffect(() => {
     fetch("https://script.google.com/macros/s/AKfycbyuHgoG7YzCjTtbicvvtgn6vZs419f4b1HUqQlveFVCaSM3cK10r14SDFpor8a4PNVb/exec")
       .then((res) => res.json())
       .then((d) => {
-        const converted = d.map((entry: any) => ({
+        const converted: HeatmapEntry[] = d.map((entry: any) => ({
           date: entry.date,
-          count: entry.minutes / 60, // 分→時間に変換
+          count: entry.minutes / 60,
         }));
         setData(converted);
       });
